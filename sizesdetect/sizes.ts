@@ -59,15 +59,20 @@ export class ResponsiveConfig {
 @Injectable()
 export class ResponsiveState {
     private _responsiveConfig: ResponsiveConfig;
-    elementoObservar: Observable<any>;
-    anchoObservar: Observable<any>;
-    width: any;
+    elementoObservar: Observable<string>;
+    anchoObservar: Observable<number>;
+    width: number;
 
     constructor(@Optional() responsiveConfig: ResponsiveConfig) {
         this._responsiveConfig = !!responsiveConfig ? responsiveConfig : new ResponsiveConfig();
-        let observer = Observable.fromEvent(window, 'resize').debounceTime(this._responsiveConfig.config.debounceTime);
-        this.elementoObservar = observer.map(this.sizeOperations).share();
-        this.anchoObservar = observer.map(this.sizeObserver).share();
+        let observer = Observable
+            .fromEvent(window, 'resize')
+            .debounceTime(this._responsiveConfig.config.debounceTime)
+            .defaultIfEmpty()
+            .startWith(this.getWidth());
+
+        this.elementoObservar = observer.map(this.sizeOperations);//.share() //todo share seems to break startWith behavior;
+        this.anchoObservar = observer.map(this.sizeObserver);//.share();
     }
 
 
@@ -483,7 +488,8 @@ abstract class ShowHideItBootstrap implements OnInit, OnDestroy {
 
     protected setGrid(grid_state: string[]|string) {
         this._grid_state = <string[]>(Array.isArray(grid_state) ? grid_state : [grid_state]);
-        this.updateView(this._responsiveState.getDeviceSizeInitial());
+        // this.updateView(this._responsiveState.getDeviceSizeInitial());
+
     }
 
     ngOnInit() {
@@ -644,5 +650,25 @@ export class HideItSizes {
                 this.viewContainer.createEmbeddedView(this.templateRef);
             }
         }
+    }
+}
+
+
+/*======== responsiveSizeInfo =========*/
+/* responsiveSizeInfo */
+@Directive({
+    selector: "[responsiveSizeInfo]",
+    exportAs: "responsiveSizeInfoCtrl"
+})
+export class ResponsiveSizeInfo implements OnInit {
+    public currentOperation: string;
+
+    constructor(private _responsiveState: ResponsiveState) {
+        this._responsiveState.elementoObservar.subscribe(value => {
+            this.currentOperation = value
+        });
+    }
+
+    ngOnInit() {
     }
 }
