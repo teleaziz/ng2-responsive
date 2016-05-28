@@ -1,7 +1,7 @@
-node_modules/
-dist/
-*.d.ts
-*.log
-*.tgz
-
-.idea/
+/nbproject/
+/.idea/*
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
