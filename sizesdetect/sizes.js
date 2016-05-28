@@ -1,11 +1,11 @@
 /**
  * Responsive Devices Detect Directives for Angular 2
  *
- * @created_by Manu Cutillas
+ * @Created_by Manu Cutillas
  * @Contributors Christophe HOARAU
  * @created_at May 23, 2016
- * @updated_at May 26, 2016 - by Christophe HOARAU
- * @version_0.1.3
+ * @updated_at May 27, 2016 - by Christophe HOARAU
+ * @version_0.1.6
  *
  * Dependencies:
  * @angular/core : "2.0.0-rc.1"
@@ -101,7 +101,6 @@ var ResponsiveState = (function () {
             return null;
         };
         this._responsiveConfig = !!responsiveConfig ? responsiveConfig : new ResponsiveConfig();
-        // console.log("_responsiveConfig2:", this._responsiveConfig);
         var observer = Rx_1.Observable.fromEvent(window, 'resize').debounceTime(this._responsiveConfig.config.debounceTime);
         this.elementoObservar = observer.map(this.sizeOperations).share();
         this.anchoObservar = observer.map(this.sizeObserver).share();
